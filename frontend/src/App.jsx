@@ -5,15 +5,22 @@ import NavBar from "./components/NavBar";
 const App = () => {
     return (
         <div>
-            <NavBar />
             <Routes>
                 {routes.map((route, index) => {
                     const Page = route.component;
+                    let navState = '';
+                    if (index == 0) navState = 'home';
+                    else if (index == 1) navState = 'account';
+                    else if (index == 3) navState = 'account';
+                    else if (index > 3) navState = 'room';
                     return (
                         <Route
                             key={index}
-                            element={<Page />}
                             path={route.path}
+                            element={<>
+                                <NavBar state={navState} />
+                                <Page />
+                            </>}
                         />                
                     );
                 })}
