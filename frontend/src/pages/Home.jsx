@@ -1,0 +1,30 @@
+import React from 'react';
+import room1 from '../assets/Phong1.jpg';
+import room2 from '../assets/Phong2.jpg';
+import './Home.css';
+
+const Home = () => {
+    return (
+        <div>
+            <div className='Intro'>
+                <div className='block'>
+                    <h1>ĐĂNG KÝ PHÒNG HỌC</h1>
+                    <h3>Hệ thống đăng ký phòng học dành cho giảng viên</h3>
+                    <div className='button'>
+                        <h4>Đăng ký</h4>
+                    </div>
+                </div>
+                <img src={room1} alt='Phong hoc 1' width={600} />
+            </div>
+            <div className='Info'>
+                <img src={room2} alt='Phong hoc 1' height={350} />
+                <div className='block'>
+                    <h3>Sinh viên, giảng viên, cán bộ, nhân viên có thể kiểm tra</h3>
+                    <h3>các thông tin liên quan đến phòng học tại trang web này</h3>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default Home
