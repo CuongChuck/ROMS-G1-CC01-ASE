@@ -1,6 +1,7 @@
 import React from 'react';
 import './Account.css';
 import SecondaryButton from '../../components/SecButton/SecondaryButton';
+import Table from '../../components/Table/Table';
 
 const Account = () => {
     const lec_name = 'ABC';
@@ -15,21 +16,7 @@ const Account = () => {
                 </div>
                 <SecondaryButton content={1} />
             </div>
-            <div className='History'>
-                <h1>LỊCH SỬ ĐĂNG KÝ PHÒNG</h1>
-                <table>
-                    <tr className='Heading'>
-                        <th>Phòng</th>
-                        <th>Ngày</th>
-                        <th>Tiết</th>
-                    </tr>
-                    <tr>
-                        <td>B1-201</td>
-                        <td>01/01/2025</td>
-                        <td>2-4</td>
-                    </tr>
-                </table>
-            </div>
+            <Table title={0} />
         </div>
     )
 }
