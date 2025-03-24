@@ -11,3 +11,7 @@
         color: var(--color-text);
     }
 }
+
+.secbutton:hover {
+    cursor: pointer;
+}
