@@ -7,6 +7,8 @@ const SecondaryButton = ({content, style, onClick}) => {
             <h4>{content === 0
                 ? 'Đăng ký'
                 : content === 1
+                ? 'Thông tin tài khoản'
+                : content === 2
                 ? 'Xem lịch sử dụng phòng'
                 : 'Huỷ'
             }</h4>
