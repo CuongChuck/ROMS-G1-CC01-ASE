@@ -27,7 +27,7 @@ const NavBarWrapper = () => {
     let state = '';
     if (location.pathname === '/') state = 'home';
     else if (location.pathname === '/room') state = 'room';
-    else if (location.pathname === '/login') state = 'account';
+    else if (location.pathname === '/login' || location.pathname === '/account') state = 'account';
 
     return <NavBar state={state} />;
 };
