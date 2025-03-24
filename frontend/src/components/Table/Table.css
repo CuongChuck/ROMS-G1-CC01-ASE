@@ -1,0 +1,27 @@
+.Table {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 60px;
+
+    h1 {
+        margin-bottom: 30px;
+    }
+}
+
+table, th, td {
+    border: 1px solid var(--color-accent);
+    border-collapse: collapse;
+    font-family: "Inter";
+    font-size: var(--small-textsize);
+    text-align: center;
+}
+
+th {
+    background-color: var(--color-secondary);
+    padding: 10px 0px;
+}
+
+td {
+    padding: 15px 80px;
+}
