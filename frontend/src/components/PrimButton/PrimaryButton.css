@@ -1,0 +1,17 @@
+.primbutton {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    border-radius: 40px;
+    background-color: var(--color-primary);
+    padding: 15px 35px;
+
+    h4 {
+        font-weight: 600;
+        color: var(--color-background);
+    }
+}
+
+.primbutton:hover {
+    cursor: pointer;
+}

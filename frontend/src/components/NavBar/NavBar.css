@@ -1,0 +1,26 @@
+.NavBar {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.Logo {
+    display: flex;
+    flex-direction: row;
+    margin-right: 350px;
+    img {
+        margin: 5px;
+    }
+}
+
+.Tabs {
+    display: flex;
+    flex-direction: row;
+    .Tab {
+        padding: 20px 40px;
+    }
+    .Tab:hover {
+        cursor: pointer;
+    }
+}
