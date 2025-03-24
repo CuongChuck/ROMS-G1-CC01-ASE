@@ -20,4 +20,7 @@
     .Tab {
         padding: 20px 40px;
     }
+    .Tab:hover {
+        cursor: pointer;
+    }
 }
