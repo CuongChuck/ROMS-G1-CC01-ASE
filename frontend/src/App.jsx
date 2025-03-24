@@ -1,6 +1,6 @@
 import { Route, Routes, useLocation, useNavigate } from "react-router";
 import { routes } from './Routes';
-import NavBar from "./components/NavBar";
+import NavBar from "./components/NavBar/NavBar";
 import { useEffect } from "react";
 
 const BackButtonHandler = () => {

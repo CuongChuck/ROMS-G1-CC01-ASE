@@ -1,7 +1,7 @@
 import React from 'react';
 import './LogIn.css';
-import AuthForm from '../components/AuthForm';
-import SecondaryButton from '../components/SecondaryButton';
+import AuthForm from '../../components/AuthForm/AuthForm';
+import SecondaryButton from '../../components/SecButton/SecondaryButton';
 import { useNavigate } from 'react-router-dom';
 
 const LogIn = () => {

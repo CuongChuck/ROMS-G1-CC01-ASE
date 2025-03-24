@@ -1,8 +1,8 @@
 import React from 'react';
-import room1 from '../assets/Phong1.jpg';
-import room2 from '../assets/Phong2.jpg';
+import room1 from '../../assets/Phong1.jpg';
+import room2 from '../../assets/Phong2.jpg';
 import './Home.css';
-import PrimaryButton from '../components/PrimaryButton';
+import PrimaryButton from '../../components/PrimButton/PrimaryButton';
 import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
