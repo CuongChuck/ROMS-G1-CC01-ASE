@@ -1,9 +1,9 @@
 import React from 'react';
 import './PrimaryButton.css';
 
-const PrimaryButton = ({content}) => {
+const PrimaryButton = ({content, onClick}) => {
     return (
-        <div className='primbutton'>
+        <div className='primbutton' onClick={onClick}>
             <h4>{content === 0
                 ? 'Đăng ký'
                 : content === 1
