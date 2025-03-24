@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const NavBar = ({state}) => {
     const navigate = useNavigate();
+    const auth = true;
 
     return (
         <div className='NavBar'>
@@ -26,9 +27,9 @@ const NavBar = ({state}) => {
                 <div
                     className='Tab'
                     style={{borderBottom: state === 'account' ? "2px solid var(--color-accent)" : 'none'}}
-                    onClick={() => navigate('/login')}
+                    onClick={() => {auth ? navigate('/account') : navigate('/login')}}
                 >
-                    <h5>Đăng nhập</h5>
+                    <h5>{auth ? 'Tài khoản' : 'Đăng nhập'}</h5>
                 </div>
             </div>
         </div>
