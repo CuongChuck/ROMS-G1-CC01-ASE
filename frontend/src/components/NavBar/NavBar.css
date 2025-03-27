@@ -14,6 +14,10 @@
     }
 }
 
+.Logo:hover {
+    cursor: pointer;
+}
+
 .Tabs {
     display: flex;
     flex-direction: row;

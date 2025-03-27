@@ -9,7 +9,10 @@ const NavBar = ({state}) => {
 
     return (
         <div className='NavBar'>
-            <div className='Logo'>
+            <div
+                className='Logo'
+                onClick={() => navigate('/')}
+            >
                 <img src={logo} width={100} alt='BK' />
                 <h2>BK-ROMS</h2>
             </div>
@@ -21,7 +24,11 @@ const NavBar = ({state}) => {
                 >
                     <h5>Trang chủ</h5>
                 </div>
-                <div className='Tab' style={{borderBottom: state === 'room' ? "2px solid var(--color-accent)" : 'none'}}>
+                <div
+                    className='Tab'
+                    style={{borderBottom: state === 'room' ? "2px solid var(--color-accent)" : 'none'}}
+                    onClick={() => navigate('/rooms')}
+                >
                     <h5>Phòng</h5>
                 </div>
                 <div
