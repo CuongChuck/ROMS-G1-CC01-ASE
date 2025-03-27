@@ -12,5 +12,6 @@
         background-color: inherit;
         margin: 10px;
         font-size: var(--small-textsize);
+        color: var(--color-background);
     }
 }
