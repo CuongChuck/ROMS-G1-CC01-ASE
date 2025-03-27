@@ -25,8 +25,9 @@ const BackButtonHandler = () => {
 const NavBarWrapper = () => {
     const location = useLocation();
     let state = '';
+    const paths1 = ['/rooms', '/room', '/room/register'];
     if (location.pathname === '/') state = 'home';
-    else if (location.pathname === '/room') state = 'room';
+    else if (paths1.includes(location.pathname)) state = 'room';
     else if (location.pathname === '/login' || location.pathname === '/account') state = 'account';
 
     return <NavBar state={state} />;
