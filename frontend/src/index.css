@@ -46,3 +46,11 @@ h5 {
     font-weight: 500;
     margin: 0px;
 }
+
+input:focus {
+    outline: none;
+}
+
+input {
+    padding: 0px 5px;
+}
