@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const NavBar = ({state}) => {
     const navigate = useNavigate();
-    const auth = true;
+    const auth = false;
 
     return (
         <div className='NavBar'>
