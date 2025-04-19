@@ -1,6 +1,7 @@
 import express from 'express';
-import { PORT, mysqlConnection } from './config';
+import { PORT, mysqlConnection } from './config.js';
 import cors from 'cors';
+import authRouter from './routes/authRouter.js';
 
 const app = express();
 
@@ -22,3 +23,5 @@ mysqlConnection.connect((err) => {
     if (err) return console.err(err.message);
     console.log("Connected to MySQL server");
 });
+
+app.use('/', authRouter);
