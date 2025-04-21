@@ -3,7 +3,7 @@ import Table from '../../components/Table/Table';
 
 const Room = () => {
     return (
-        <Table title={1} />
+        <Table />
     )
 }   
 
