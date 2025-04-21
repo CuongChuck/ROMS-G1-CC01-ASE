@@ -8,7 +8,7 @@ const RoomList = () => {
         <div className='RoomListPage'>
             <h2>TÌM PHÒNG HỌC</h2>
             <SearchBar />
-            <Room state={0} />
+            <Room state={0} account={false} />
         </div>
     )
 }
