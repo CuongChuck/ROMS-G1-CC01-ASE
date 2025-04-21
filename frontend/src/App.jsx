@@ -2,6 +2,8 @@ import { Route, Routes, useLocation, useNavigate } from "react-router";
 import { routes } from './Routes';
 import NavBar from "./components/NavBar/NavBar";
 import { useEffect } from "react";
+import { AuthProvider } from "./content/AuthProvider";
+import ProtectedRoute from "./content/ProtectedRoute";
 
 const BackButtonHandler = () => {
     const navigate = useNavigate();
@@ -26,14 +28,15 @@ const NavBarWrapper = () => {
     const location = useLocation();
     let state = '';
     const paths1 = ['/rooms', '/room', '/room/register'];
+    const paths2 = ['/login', '/f2a', '/account'];
     if (location.pathname === '/') state = 'home';
     else if (paths1.includes(location.pathname)) state = 'room';
-    else if (location.pathname === '/login' || location.pathname === '/account') state = 'account';
+    else if (paths2.includes(location.pathname)) state = 'account';
 
     return <NavBar state={state} />;
 };
 
-const App = () => {
+const AppInner = () => {
     return (
         <div>
             <BackButtonHandler />
@@ -41,17 +44,64 @@ const App = () => {
             <Routes>
                 {routes.map((route, index) => {
                     const Page = route.component;
-                    return (
+                    if (index > 2 && index < 6) {
+                        return (
+                            <Route
+                                key={index}
+                                path={route.path}
+                                element={
+                                    <ProtectedRoute requiredRole={"guest"}>
+                                        <Page />
+                                    </ProtectedRoute>
+                                }
+                            />                
+                        );
+                    }
+                    else if (index == 6) {
+                        return (
+                            <Route
+                                key={index}
+                                path={route.path}
+                                element={
+                                    <ProtectedRoute requiredRole={"user"}>
+                                        <Page />
+                                    </ProtectedRoute>
+                                }
+                            />                
+                        );
+                    }
+                    else if (index == 7) {
+                        return (
+                            <Route
+                                key={index}
+                                path={route.path}
+                                element={
+                                    <ProtectedRoute requiredRole={"lecture"}>
+                                        <Page />
+                                    </ProtectedRoute>
+                                }
+                            />
+                        );
+                    }
+                    else return (
                         <Route
                             key={index}
                             path={route.path}
                             element={<Page />}
-                        />                
+                        />
                     );
                 })}
             </Routes>
         </div>
     )
+}
+
+function App() {
+    return (
+        <AuthProvider>
+            <AppInner />
+        </AuthProvider>
+    );
 }
 
 export default App
