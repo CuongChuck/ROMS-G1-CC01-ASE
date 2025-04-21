@@ -2,10 +2,13 @@ import React from 'react';
 import logo from '../../assets/logoBK.png';
 import './NavBar.css';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import useAuth from '../../content/useAuth';
 
 const NavBar = ({state}) => {
     const navigate = useNavigate();
-    const auth = false;
+    axios.defaults.withCredentials = true;
+    const { isAuthenticated } = useAuth();
 
     return (
         <div className='NavBar'>
@@ -34,9 +37,9 @@ const NavBar = ({state}) => {
                 <div
                     className='Tab'
                     style={{borderBottom: state === 'account' ? "2px solid var(--color-accent)" : 'none'}}
-                    onClick={() => {auth ? navigate('/account') : navigate('/login')}}
+                    onClick={() => {isAuthenticated ? navigate('/account') : navigate('/login')}}
                 >
-                    <h5>{auth ? 'Tài khoản' : 'Đăng nhập'}</h5>
+                    <h5>{isAuthenticated ? 'Tài khoản' : 'Đăng nhập'}</h5>
                 </div>
             </div>
         </div>
