@@ -1,47 +1,103 @@
 import express from 'express';
 import { mysqlConnection } from '../config.js';
 import jwt from 'jsonwebtoken';
+import mailer from 'nodemailer';
+import crypto from 'crypto';
 
 const authRouter = express.Router();
 
-const verifyLecturer = (request, response, next) => {
-    const token = request.cookies.token;
-    if (!token) return response.json({message: "Token needed"});
-    else {
-        jwt.verify(token, "jwt-secret-key", (err, decoded) => {
-            if (err) return response.json({message: "Authentication Error."});
-            const role = decoded.role;
-            if (role != 0) return response.json({message: "Authentication Error."});
-            next();
-        });
+const transporter = mailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'englishtalent123@gmail.com',
+        pass: 'wcsj epjk acvx scpt'
     }
-}
+});
+
+var code = '';
+var ID = '';
+var ROLE = 0;
+var email = '';
 
 const verifyUser = (request, response, next) => {
-    const token = request.cookies.token;
+    const token = request.headers["access-token"];
     if (!token) return response.json({message: "Token needed"});
     else {
         jwt.verify(token, "jwt-secret-key", (err, decoded) => {
-            if (err) return response.json({message: "Authentication Error."});
+            if (err) return response.json({message: "Authentication Error"});
             const role = decoded.role;
-            if (role != 1) return response.json({message: "Authentication Error."});
+            if (role != 1 && role != 2) return response.json({message: "Authentication Error"});
+            next();
+        });
+    }
+}
+
+const verifyLecture = (request, response, next) => {
+    const token = request.headers["access-token"];
+    if (!token) return response.json({message: "Token needed"});
+    else {
+        jwt.verify(token, "jwt-secret-key", (err, decoded) => {
+            if (err) return response.json({message: "Authentication Error"});
+            const role = decoded.role;
+            if (role != 1) return response.json({message: "Authentication Error"});
             next();
         });
     }
 }
 
 // Route for confirm log in
-authRouter.get('/lecturer/auth', verifyLecturer, (request, response) => {
-    return response.json({status: "Lecturer Authorized"});
+authRouter.get('/auth', verifyUser, (request, response) => {
+    return response.json({message: "User Authorized"});
 });
 
 // Route for confirm log in
-authRouter.get('/user/auth', verifyUser, (request, response) => {
-    return response.json({status: "User Authorized"});
+authRouter.get('/lecture/auth', verifyLecture, (request, response) => {
+    return response.json({message: "Lecture Authorized"});
+});
+
+// Check code
+authRouter.post('/f2a', async (request, response) => {
+    try {
+        const receivedCode = request.body.code;
+        if (receivedCode == code) {
+            const token = jwt.sign({id: ID, role: ROLE}, "jwt-secret-key", {expiresIn: '1d'});
+            response.cookie("token", token, {sameSite:'none'});
+            return response.status(200).json({status: "Login Success", token: token});
+        }
+        else {
+            return response.status(200).json({status: "Login Failed"});
+        }
+    } catch (err) {
+        console.error(err);
+        response.status(500).json({ message: err.message });
+    }
+});
+
+// Resend the code
+authRouter.get('/f2a/resend', (request, response) => {
+    try {
+        code = crypto.randomInt(100000, 999999).toString();
+        const mailOptions = {
+            from: '"BK-ROMS" <englishtalent123@gmail.com>',
+            to: `${email}`,
+            subject: 'Mã xác thực 2 yếu tố - BK-ROMS',
+            text: `KHÔNG ĐƯỢC CHIA SẺ MÃ. Nhập mã này để đăng nhập vào hệ thống BK-ROMS: ${code}`
+        };
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error("Error sending email:", error);
+                return response.status(500).json({ message: "Failed to send email" });
+            }
+            console.log("Email sent:", info.messageId);
+        });
+    } catch (err) {
+        console.error(err);
+        response.status(500).json({ message: err.message });
+    }
 });
 
 // Route for confirm log in
-authRouter.get('/role', (request, response) => {
+authRouter.get('/role', async (request, response) => {
     try {
         const token = request.cookies.token;
         if (!token) return response.json({message: "Token needed"});
@@ -49,18 +105,19 @@ authRouter.get('/role', (request, response) => {
             jwt.verify(token, "jwt-secret-key", (err, decoded) => {
                 if (err) return response.json({message: "Authentication Error."});
                 const role = decoded.role;
-                if (role == 0) return response.json({role: "Role Lecturer", id: decoded.id});
+                if (role == 1) return response.json({role: "Role Lecturer", id: decoded.id});
                 else return response.json({role: "Role User", id: decoded.id});
             });
         }
     } catch (err) {
+        console.error(err);
         response.status(500).send({message: err.message});
     }
 });
 
 // Route for logout
 authRouter.get('/logout', (request, response) => {
-    response.clearCookie('token');
+    response.clearCookie("token");
     return response.json({message: "Logout Success"});
 });
 
@@ -104,11 +161,23 @@ authRouter.post('/login', async (request, response) => {
             if (err || results.length == 0 || request.body.password != results[0].Password)
                 return response.status(404).json({status: "Failed"});
             else {
-                const id = results[0].UserID;
-                const role = results[0].Role.readUInt8(0);
-                const token = jwt.sign({id, role}, "jwt-secret-key", {expiresIn: '1d'});
-                response.cookie('token', token, {sameSite:'none'});
-                return response.status(200).json({status: "Login Success", UserID: id});
+                code = crypto.randomInt(100000, 999999).toString();
+                email = results[0].Email;
+                const mailOptions = {
+                    from: '"BK-ROMS" <englishtalent123@gmail.com>',
+                    to: `${email}`,
+                    subject: 'Mã xác thực 2 yếu tố - BK-ROMS',
+                    text: `KHÔNG ĐƯỢC CHIA SẺ MÃ. Nhập mã này để đăng nhập vào hệ thống BK-ROMS: ${code}`
+                };
+                transporter.sendMail(mailOptions, (error, info) => {
+                    if (error) {
+                        console.error("Error sending email:", error);
+                        return response.status(500).json({ message: "Failed to send email" });
+                    }
+                    console.log("Email sent:", info.messageId);
+                });
+                ID = results[0].UserID;
+                ROLE = results[0].Role;
             }
         });
     } catch (err) {
@@ -118,15 +187,21 @@ authRouter.post('/login', async (request, response) => {
 });
 
 // Route for SELECT a User
-authRouter.get('/user/:id', async (request, response) => {
+authRouter.get('/user', async (request, response) => {
     try {
-        const { id } = request.params;
-        const sql = `CALL GetUser(${id})`;
-        mysqlConnection.query(sql, (err, results, fields) => {
-            if (err) return response.status(404).send({message: err.message});
-            return response.status(200).json({
-                data: results[0],
-                role: results[0][0].Role.readUInt8(0)
+        const token = request.headers["access-token"];
+        if (!token) return response.json({message: "Token needed"});
+        jwt.verify(token, "jwt-secret-key", (err, decoded) => {
+            if (err) return response.json({message: "Authentication Error"});
+            const id = parseInt(decoded.id, 10);
+            const sql = `CALL GetUserProfile(${id})`;
+            mysqlConnection.query(sql, (err, results, fields) => {
+                if (err) return response.status(404).send({message: err.message});
+                console.log(results);
+                return response.status(200).json({
+                    name: results[0][0].Name,
+                    faculty: results[0][0].FacultyName
+                });
             });
         });
     } catch (err) {
