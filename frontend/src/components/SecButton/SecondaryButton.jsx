@@ -2,7 +2,7 @@ import React from 'react';
 import './SecondaryButton.css';
 
 const SecondaryButton = ({content, style, onClick}) => {
-    const lst = ['Đăng ký', 'Thông tin tài khoản', 'Xem lịch sử dụng phòng', 'Huỷ'];
+    const lst = ['Đăng ký', 'Đăng xuất', 'Xem lịch sử dụng phòng', 'Huỷ', 'Gửi lại mã'];
     const size = content == 2 ? 'var(--tiny-textsize)' : 'var(--small-textsize)';
 
     return (
