@@ -16,6 +16,11 @@
                 margin-bottom: 10px;
             }
         }
+        
+        .accountButtons {
+            display: flex;
+            flex-direction: column;
+        }
     }
 
     .History {
