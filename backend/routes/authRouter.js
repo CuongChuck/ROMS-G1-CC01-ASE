@@ -80,7 +80,7 @@ authRouter.get('/f2a/resend', (request, response) => {
         const mailOptions = {
             from: '"BK-ROMS" <englishtalent123@gmail.com>',
             to: `${email}`,
-            subject: 'Mã xác thực 2 yếu tố - BK-ROMS',
+            subject: 'NoReply - Mã xác thực 2 yếu tố',
             text: `KHÔNG ĐƯỢC CHIA SẺ MÃ. Nhập mã này để đăng nhập vào hệ thống BK-ROMS: ${code}`
         };
         transporter.sendMail(mailOptions, (error, info) => {
@@ -125,8 +125,7 @@ authRouter.get('/logout', (request, response) => {
 authRouter.post('/register', async (request, response) => {
     try {
         if (!request.body.email || !request.body.username || !request.body.password ||
-            !request.body.name || !request.body.faculty || !request.body.role
-        ) {
+            !request.body.name || !request.body.faculty || !request.body.role) {
             return response.status(400).send({
                 message: "Send all required fields"
             });
@@ -166,7 +165,7 @@ authRouter.post('/login', async (request, response) => {
                 const mailOptions = {
                     from: '"BK-ROMS" <englishtalent123@gmail.com>',
                     to: `${email}`,
-                    subject: 'Mã xác thực 2 yếu tố - BK-ROMS',
+                    subject: 'NoReply - Mã xác thực 2 yếu tố',
                     text: `KHÔNG ĐƯỢC CHIA SẺ MÃ. Nhập mã này để đăng nhập vào hệ thống BK-ROMS: ${code}`
                 };
                 transporter.sendMail(mailOptions, (error, info) => {
@@ -187,7 +186,7 @@ authRouter.post('/login', async (request, response) => {
 });
 
 // Route for SELECT a User
-authRouter.get('/user', async (request, response) => {
+authRouter.get('/profile', async (request, response) => {
     try {
         const token = request.headers["access-token"];
         if (!token) return response.json({message: "Token needed"});
@@ -197,32 +196,17 @@ authRouter.get('/user', async (request, response) => {
             const sql = `CALL GetUserProfile(${id})`;
             mysqlConnection.query(sql, (err, results, fields) => {
                 if (err) return response.status(404).send({message: err.message});
-                console.log(results);
                 return response.status(200).json({
                     name: results[0][0].Name,
-                    faculty: results[0][0].FacultyName
+                    faculty: results[0][0].FacultyName,
+                    role: results[0][0].Role
                 });
             });
         });
+        response.clearCookie("token");
     } catch (err) {
         console.error(err.message);
         response.status(500).send({message: err.message});
-    }
-});
-
-// Route for Delete a author based on ID
-authRouter.delete('/user/delete/:id', async (request, response) => {
-    try {
-        const { id } = request.params;
-        const sql = `CALL DeleteUser(?)`;
-        mysqlConnection.query(sql, [id], (err, results, fields) => {
-            if (err || results.affectedRows == 0) return response.status(404).json({message: "User not found"});
-            response.clearCookie('token');
-            return response.status(200).send({message: `User ${id} is deleted`});
-        });
-    } catch (err) {
-        console.error(err);
-        response.status(500).send({message: err.message}); 
     }
 });
 
