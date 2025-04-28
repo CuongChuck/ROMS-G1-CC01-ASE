@@ -57,7 +57,7 @@ const AppInner = () => {
                             />                
                         );
                     }
-                    else if (index == 6) {
+                    else if (index > 5 && index < 8) {
                         return (
                             <Route
                                 key={index}
@@ -70,7 +70,7 @@ const AppInner = () => {
                             />                
                         );
                     }
-                    else if (index == 7) {
+                    else if (index == 8) {
                         return (
                             <Route
                                 key={index}

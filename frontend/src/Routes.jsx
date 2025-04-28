@@ -6,6 +6,7 @@ import Register from "./pages/Register/Register";
 import Room from "./pages/Room/Room";
 import RoomList from "./pages/RoomList/RoomList";
 import RoomRegister from "./pages/RoomRegister/RoomRegister";
+import AccountEdit from "./pages/AccountEdit/AccountEdit";
 
 const routes = [
     {path: '/', component: Home},
@@ -15,6 +16,7 @@ const routes = [
     {path: '/f2a', component: F2A},
     {path: '/register', component: Register},
     {path: '/account', component: Account},
+    {path: '/profile', component: AccountEdit},
     {path: '/room/register', component: RoomRegister}
 ];
 
