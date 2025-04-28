@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './AuthForm.css';
 import PrimaryButton from '../PrimButton/PrimaryButton';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import useAuth from '../../content/useAuth';
+import SecondaryButton from '../SecButton/SecondaryButton';
 
 const AuthForm = ({content}) => {
     const [username, setUsername] = useState('');
@@ -13,6 +15,7 @@ const AuthForm = ({content}) => {
     const [password, setPassword] = useState('');
     axios.defaults.withCredentials = true;
     const navigate = useNavigate();
+    const { handleDelete } = useAuth();
 
     const handleRegister = () => {
         const data = {
@@ -20,7 +23,7 @@ const AuthForm = ({content}) => {
             email, role, password
         };
         axios
-            .post("http://localhost:8080/register", data)
+            .post("https://localhost:8080/register", data)
             .then(() => {
                 navigate('/login');
             })
@@ -33,7 +36,7 @@ const AuthForm = ({content}) => {
     const handleLogIn = () => {
         const data = { username, password };
         axios
-            .post("http://localhost:8080/login", data)
+            .post("https://localhost:8080/login", data)
             .then(() => {
                 navigate('/f2a');
             })
@@ -41,11 +44,50 @@ const AuthForm = ({content}) => {
                 console.error(err);
                 alert("An error occurred when authorizing a user");
             })
-    }
+    };
+
+    const handleUpdate = () => {
+        const data = { username, name, faculty, email, password,
+            headers: {
+                "access-token": localStorage.getItem("token")
+            }
+        };
+        axios
+            .put("https://localhost:8080/user/update", data)
+            .then(() => {
+                navigate('/account');
+            })
+            .catch((err) => {
+                console.error(err);
+                alert("An error occurred when updating a user");
+            })
+    };
+
+    useEffect(() => {
+        if (content == 2) {
+            axios
+                .get("https://localhost:8080/user/detail", {
+                    headers: {
+                        "access-token": localStorage.getItem("token")
+                    }
+                })
+                .then((response) => {
+                    setUsername(response.data.username);
+                    setName(response.data.name);
+                    setFac(response.data.faculty);
+                    setEmail(response.data.email);
+                    setRole(response.data.role);
+                })
+                .catch((err) => {
+                    console.error(err);
+                    alert("An error occurred when getting a user");
+                })
+        }
+    }, [content]);
 
     return (
         <div className='AuthForm'>
-            <h2>{content == 0 ? 'Đăng ký' : 'Đăng nhập'}</h2>
+            <h2>{content == 0 ? 'Đăng ký' : content == 1 ? 'Đăng nhập' : 'Thông tin tài khoản'}</h2>
             <div className='field'>
                 <h4>Username</h4>
                 <form>
@@ -56,7 +98,7 @@ const AuthForm = ({content}) => {
                         onChange={(e) => setUsername(e.target.value)}
                     />
                 </form>
-                {content == 0 ? (
+                {content != 1 ? (
                     <>
                         <h4>Họ tên</h4>
                         <form>
@@ -72,7 +114,7 @@ const AuthForm = ({content}) => {
                             <select value={faculty} onChange={(e) => setFac(e.target.value)}>
                                 <option value="1">Đào tạo bảo dưỡng công nghiệp</option>
                                 <option value="2">Cơ khí</option>
-                                <option value="3">KT địa chất và dầu khí</option>
+                                <option value="3">KT địa chất & dầu khí</option>
                                 <option value="4">Điện - Điện tử</option>
                                 <option value="5">KT giao thông</option>
                                 <option value="6">KT hoá học</option>
@@ -93,13 +135,17 @@ const AuthForm = ({content}) => {
                                 onChange={(e) => setEmail(e.target.value)}
                             />
                         </form>
-                        <h4>Bạn là</h4>
-                        <form>
-                            <select value={role} onChange={(e) => setRole(e.target.value)}>
-                                <option value="1">Giảng viên</option>
-                                <option value="2">Sinh viên/Cán bộ</option>
-                            </select>
-                        </form>
+                        {content != 2 ? (
+                            <div>
+                                <h4>Bạn là</h4>
+                                <form>
+                                    <select value={role} onChange={(e) => setRole(e.target.value)}>
+                                        <option value="1">Giảng viên</option>
+                                        <option value="2">Sinh viên/Cán bộ</option>
+                                    </select>
+                                </form>
+                            </div>
+                        ) : (<></>)}
                     </>
                 ) : (<></>)}
                 <h4>Mật khẩu {content == 0 ? '(ít nhất 12 ký tự)' : ''}</h4>
@@ -108,18 +154,27 @@ const AuthForm = ({content}) => {
                         type='password'
                         required
                         value={password}
+                        placeholder={content == 2 ? 'Nhập mật khẩu để xác nhận' : ''}
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </form>
-                <PrimaryButton content={content} onClick={() => {
+                <PrimaryButton content={content == 2 ? 7 : content} onClick={() => {
                     if (content == 0) {
                         if (password.length >= 12) handleRegister();
+                        else alert("Mật khẩu phải có ít nhất 12 ký tự");
                     }
-                    else {
+                    else if (content == 1) {
                         handleLogIn();
                         navigate('/f2a');
                     }
+                    else handleUpdate();
                 }} />
+                {content == 2 ? (
+                    <>
+                        <span style={{margin:'10px'}} />
+                        <SecondaryButton content={5} onClick={() => handleDelete(password)} />
+                    </>
+                ) : (<></>)}
             </div>
         </div>
     )
