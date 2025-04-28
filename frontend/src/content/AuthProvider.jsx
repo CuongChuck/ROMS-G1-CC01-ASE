@@ -9,13 +9,13 @@ export const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const token = localStorage.getItem('authToken');
+        const token = localStorage.getItem('token');
         setIsAuthenticated(!!token);
     }, []);
 
     const handleConfirmLogIn = (data) => {
         axios
-            .post('http://localhost:8080/f2a', data)
+            .post('https://localhost:8080/f2a', data)
             .then((response) => {
                 if (response.data.status === "Login Success") {
                     localStorage.setItem("token", response.data.token);
@@ -34,7 +34,27 @@ export const AuthProvider = ({ children }) => {
 
     const handleLogout = () => {
         axios
-            .get('http://localhost:8080/logout')
+            .get('https://localhost:8080/logout')
+            .then(() => {
+                localStorage.removeItem("token");
+                setIsAuthenticated(false);
+                navigate('/');
+            })
+            .catch((err) => {
+                alert(err.message);
+            })
+    };
+
+    const handleDelete = (pass) => {
+        axios
+            .delete("https://localhost:8080/user/delete", {
+                headers: {
+                    "access-token": localStorage.getItem("token")
+                },
+                data: {
+                    password: pass
+                }
+            })
             .then(() => {
                 localStorage.removeItem("token");
                 setIsAuthenticated(false);
@@ -46,7 +66,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, handleConfirmLogIn, handleLogout }}>
+        <AuthContext.Provider value={{ isAuthenticated, handleConfirmLogIn, handleLogout, handleDelete }}>
             {children}
         </AuthContext.Provider>
     );
