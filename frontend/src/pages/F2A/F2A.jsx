@@ -11,7 +11,7 @@ const F2A = () => {
     const { handleConfirmLogIn } = useAuth();
     const handleResend = () => {
         axios
-            .get('http://localhost:8080/f2a/resend')
+            .get('https://localhost:8080/f2a/resend')
             .then(() => {
                 setCode('');
             })
@@ -38,7 +38,7 @@ const F2A = () => {
                 <div className="codebuttons">
                     <PrimaryButton content={5} onClick={() => handleConfirmLogIn({code: code})} />
                     <span style={{marginBottom:'20px'}} />
-                    <SecondaryButton content={4} onClick={handleResend} />
+                    <SecondaryButton content={4} onClick={() => handleResend()} />
                 </div>
             </div>
         </div>

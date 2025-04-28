@@ -7,6 +7,7 @@ import https from 'https';
 import fs from 'fs';
 import path from 'path';
 import http from 'http';
+import userRouter from './routes/userRouter.js';
 
 const app = express();
 
@@ -15,7 +16,7 @@ app.use(cookieParser());
 
 // Handle CORS policy
 app.use(cors({
-    origin: ["http://localhost:5173"],
+    origin: ["https://localhost:5173"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 }));
@@ -50,3 +51,4 @@ mysqlConnection.connect((err) => {
 });
 
 app.use('/', authRouter);
+app.use('/user', userRouter);
