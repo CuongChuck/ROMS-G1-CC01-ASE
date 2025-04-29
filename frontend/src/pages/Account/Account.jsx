@@ -6,11 +6,13 @@ import PrimaryButton from '../../components/PrimButton/PrimaryButton';
 import axios from 'axios';
 import useAuth from '../../content/useAuth';
 import { useNavigate } from 'react-router-dom';
+import moment from 'moment';
 
 const Account = () => {
     const [name, setName] = useState('');
     const [fal_name, setFalName] = useState('');
     const [role, setRole] = useState(0);
+    const [register, setRegister] = useState([]);
     axios.defaults.withCredentials = true;
     const { handleLogout } = useAuth();
     const navigate = useNavigate();
@@ -26,6 +28,7 @@ const Account = () => {
                 setName(response.data.name);
                 setFalName(response.data.faculty);
                 setRole(response.data.role);
+                setRegister(response.data.register);
             })
             .catch(() => {
                 alert("An error occurred while retrieving user info");
@@ -46,7 +49,19 @@ const Account = () => {
                 </div>
             </div>
             <h2 style={{margin:'80px 0px 50px'}}>LỊCH SỬ ĐĂNG KÝ PHÒNG</h2>
-            <Room state={0} account={true} />
+            {register.map((reg) => {
+                return (
+                    <Room
+                        building={reg.BuildingName}
+                        num={reg.RoomNum}
+                        faculty={reg.Subject}
+                        add={reg.Location}
+                        time={"Ngày " + moment(reg.DateUse).utcOffset('+0700').format('DD-MM-YYYY') + ', Tiết: ' + reg.Start + '-' + reg.End}
+                        id={reg.RegisterID}
+                        account={true}
+                    />
+                );
+            })}
         </div>
     )
 }
