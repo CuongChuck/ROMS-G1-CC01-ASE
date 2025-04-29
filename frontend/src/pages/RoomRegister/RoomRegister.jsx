@@ -29,10 +29,9 @@ const RoomRegister = () => {
     }, [id]);
 
     const handleRegister = () => {
-        if (end >= start && start > 1 && start < 12 && end > 1 && end < 12) {
+        if (end >= start && start > 1 && start < 13 && end > 1 && end < 13) {
             axios
-                .post(`https://localhost:8080/room/register/${id}`, {
-                    roomid: id,
+                .post(`https://localhost:8080/room/register/add/${id}`, {
                     token: localStorage.getItem("token"),
                     date: date,
                     start: start,
@@ -104,7 +103,7 @@ const RoomRegister = () => {
             <div className='regButtons'>
                 <PrimaryButton content={3} onClick={() => handleRegister()} />
                 <span style={{marginBottom:'20px'}} />
-                <SecondaryButton content={6} onClick={() => navigate('/rooms')} />
+                <SecondaryButton content={3} onClick={() => navigate('/rooms')} />
             </div>
         </div>
     )
