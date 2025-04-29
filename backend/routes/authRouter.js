@@ -199,11 +199,11 @@ authRouter.get('/profile', async (request, response) => {
                 return response.status(200).json({
                     name: results[0][0].Name,
                     faculty: results[0][0].FacultyName,
-                    role: results[0][0].Role
+                    role: results[0][0].Role,
+                    register: results[1]
                 });
             });
         });
-        response.clearCookie("token");
     } catch (err) {
         console.error(err.message);
         response.status(500).send({message: err.message});
