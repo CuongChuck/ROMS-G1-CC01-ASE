@@ -4,45 +4,42 @@ import SecondaryButton from '../SecButton/SecondaryButton';
 import PrimaryButton from '../PrimButton/PrimaryButton';
 import PlaceIcon from '@mui/icons-material/Place';
 import { Link, useNavigate } from 'react-router-dom';
+import useAuth from '../../content/useAuth';
 
-const RoomInfo = ({state, account}) => {
+const RoomInfo = ({building, num, faculty, add, time, id, account}) => {
     const navigate = useNavigate();
-    const color = state == '0' ? 'red' : 'green';
-    const room = 'B1-201';
-    const fal = 'EE';
-    const stateName = state == 0 ? 'Đã dùng' : 'Trống';
-    const date = '01/01/2025';
-    const start = 1;
-    const end = 3;
+    const room = building + '-' + num;
     const primButton = account == true ? 4 : 2;
     const secButton = account == true ? 3 : 2;
+    const { isAuthenticated } = useAuth();
+
     return (
         <div className='Room'>
             <div className='container'>
                 <div className='icons'>
-                    <div className='state' style={{backgroundColor:color}} />
-                    <PlaceIcon style={{color:'var(--color-accent)'}} />
+                    <PlaceIcon style={{color:'var(--color-accent)'}} onClick={() => alert(add)} />
                 </div>
                 <div className='info'>
                     <h5 className='roomNum'>{room}</h5>
-                    <h5 className='fal'>{fal}</h5>
-                    {account == true ? (
-                        <h5>Ngày: {date}, Tiết: {start} - {end}</h5>
-                    ) : (
-                        <h5>Trạng thái: {stateName}</h5>
-                    )}
+                    <h5 className='fal'>{faculty}</h5>
+                    <h5>{account == true ? time : add}</h5>
                 </div>
             </div>
             <div className='buttons'>
-                <PrimaryButton content={primButton} onClick={() => {
-                    if (account == false) navigate('/room/register');
-                    else navigate('/room/adjust')
-                }
-                } />
-                <span />
-                <Link to='/room' target='_blank' style={{textDecoration:'none'}}>
-                    <SecondaryButton content={secButton} />
-                </Link>
+                {isAuthenticated ? (
+                    <>
+                        <PrimaryButton content={primButton} onClick={() => {
+                            if (account) navigate(`/room/adjust/${id}`);
+                            else navigate(`/room/register/${id}`);
+                        }} />
+                        {account ? (<></>) : (<span />)}
+                    </>
+                ) : (<></>)}
+                {account ? (<></>) : (
+                    <Link to={`/room/${id}`} target='_blank' style={{textDecoration:'none'}}>
+                        <SecondaryButton content={secButton} />
+                    </Link>
+                )}
             </div>
         </div>
     )
