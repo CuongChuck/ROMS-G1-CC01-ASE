@@ -8,6 +8,7 @@ import fs from 'fs';
 import path from 'path';
 import http from 'http';
 import userRouter from './routes/userRouter.js';
+import roomRouter from './routes/roomRouter.js';
 
 const app = express();
 
@@ -52,3 +53,4 @@ mysqlConnection.connect((err) => {
 
 app.use('/', authRouter);
 app.use('/user', userRouter);
+app.use('/room', roomRouter);
