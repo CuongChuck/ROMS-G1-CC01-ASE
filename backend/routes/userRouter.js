@@ -74,6 +74,7 @@ userRouter.delete('/delete', async (request, response) => {
             const sql = `DELETE FROM roms.user WHERE UserID = ${id}`;
             mysqlConnection.query(sql, (err, results, fields) => {
                 if (err) return response.status(404).send({message: err.message});
+                response.clearCookie("token");
                 return response.status(200).json({message: "Account Deleted"});
             });
         });
