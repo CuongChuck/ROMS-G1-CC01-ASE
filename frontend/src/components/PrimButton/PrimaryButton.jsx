@@ -2,7 +2,7 @@ import React from 'react';
 import './PrimaryButton.css';
 
 const PrimaryButton = ({content, onClick}) => {
-    const size = content == 2 ? 'var(--tiny-textsize)' : 'var(--small-textsize)';
+    const size = content == 2 || content == 4 ? 'var(--tiny-textsize)' : 'var(--small-textsize)';
     const info = ['Đăng ký', 'Đăng nhập', 'Đăng ký', 'Xác nhận đăng ký', 'Chỉnh sửa', 'Xác nhận', 'Thông tin tài khoản', 'Chỉnh sửa tài khoản'];
     return (
         <div className='primbutton' onClick={onClick}>

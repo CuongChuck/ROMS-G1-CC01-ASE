@@ -2,8 +2,8 @@ import React from 'react';
 import './SecondaryButton.css';
 
 const SecondaryButton = ({content, style, onClick}) => {
-    const lst = ['Đăng ký', 'Đăng xuất', 'Xem lịch sử dụng phòng', 'Huỷ', 'Gửi lại mã', 'Xoá tài khoản'];
-    const size = content == 2 ? 'var(--tiny-textsize)' : 'var(--small-textsize)';
+    const lst = ['Đăng ký', 'Đăng xuất', 'Xem chi tiết', 'Huỷ đăng ký', 'Gửi lại mã', 'Xoá tài khoản', 'Huỷ đăng ký',];
+    const size = content > 1 && content < 4 ? 'var(--tiny-textsize)' : 'var(--small-textsize)';
 
     return (
         <div className='secbutton' style={style} onClick={onClick}>
