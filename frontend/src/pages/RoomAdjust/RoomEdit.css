@@ -1,0 +1,45 @@
+.RoomRegPage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+
+    .RoomTitle {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 40px;
+
+        h2 {
+            margin-right: 50px;
+        }
+    }
+
+    .regFields {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 100px;
+
+        h4 {
+            margin-bottom: 10px;
+        }
+
+        .regField {
+            margin-bottom: 30px;
+        }
+    }
+
+    
+    .regButtons {
+        display: flex;
+        flex-direction: column;
+    }
+
+    input {
+        border: 1px solid var(--color-accent);
+        border-radius: 10px;
+        font-size: var(--small-textsize);
+        padding: 10px;
+        width: 400px;
+    }
+}
