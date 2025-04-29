@@ -70,7 +70,7 @@ const AppInner = () => {
                             />                
                         );
                     }
-                    else if (index == 8) {
+                    else if (index > 8) {
                         return (
                             <Route
                                 key={index}

@@ -7,6 +7,7 @@ import Room from "./pages/Room/Room";
 import RoomList from "./pages/RoomList/RoomList";
 import RoomRegister from "./pages/RoomRegister/RoomRegister";
 import AccountEdit from "./pages/AccountEdit/AccountEdit";
+import RoomEdit from "./pages/RoomAdjust/RoomEdit";
 
 const routes = [
     {path: '/', component: Home},
@@ -17,7 +18,8 @@ const routes = [
     {path: '/register', component: Register},
     {path: '/account', component: Account},
     {path: '/profile', component: AccountEdit},
-    {path: '/room/register/:id', component: RoomRegister}
+    {path: '/room/register/:id', component: RoomRegister},
+    {path: '/room/adjust/:id', component: RoomEdit}
 ];
 
 export { routes };
