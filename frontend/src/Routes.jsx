@@ -10,14 +10,14 @@ import AccountEdit from "./pages/AccountEdit/AccountEdit";
 
 const routes = [
     {path: '/', component: Home},
-    {path: '/room', component: Room},
+    {path: '/room/:id', component: Room},
     {path: '/rooms', component: RoomList},
     {path: '/login', component: LogIn},
     {path: '/f2a', component: F2A},
     {path: '/register', component: Register},
     {path: '/account', component: Account},
     {path: '/profile', component: AccountEdit},
-    {path: '/room/register', component: RoomRegister}
+    {path: '/room/register/:id', component: RoomRegister}
 ];
 
 export { routes };
