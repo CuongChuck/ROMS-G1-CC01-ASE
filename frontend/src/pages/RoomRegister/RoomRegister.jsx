@@ -4,17 +4,19 @@ import PrimaryButton from '../../components/PrimButton/PrimaryButton';
 import SecondaryButton from '../../components/SecButton/SecondaryButton';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import moment from 'moment';
 
 const RoomRegister = () => {
     const { id } = useParams();
     const [num, setNum] = useState('');
     const [building, setBuilding] = useState('');
     const [fal, setFal] = useState('');
-
-    const [date, setDate] = useState();
+    const [free, setFree] = useState([]);
+    const [date, setDate] = useState(null);
     const [start, setStart] = useState(2);
     const [end, setEnd] = useState(2);
     const [subject, setSubject] = useState('');
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -42,7 +44,23 @@ const RoomRegister = () => {
                 .catch(() => alert("Error occurred while registering a room"))
         }
         else alert("End session, start session, subject must be valid");
-    }
+    };
+
+    useEffect(() => {
+        if (date) {
+            setLoading(true);
+            axios
+                .get(`https://localhost:8080/room/free/${id}/${moment(date).format('YYYY-MM-DD')}`)
+                .then((response) => {
+                    setFree(response.data.data);
+                    setLoading(false);
+                })
+                .catch(() => {
+                    alert("Error occured while getting free sessions");
+                    setLoading(false);
+                })
+        }
+    }, [id, date]);
 
     return (
         <div className='RoomRegPage'>
@@ -50,6 +68,9 @@ const RoomRegister = () => {
                 <h2>{building + '-' + num}</h2>
                 <h3>{fal}</h3>
             </div>
+            {loading ? (<></>) : (
+                <h4 style={{marginBottom:'30px'}}>Các tiết trống: {free.map((session) => {return `${session}-`;})}</h4>
+            )}
             <div className='regFields'>
                 <div className='regField'>
                     <h4>Ngày</h4>
@@ -57,7 +78,7 @@ const RoomRegister = () => {
                         <input
                             type='date'
                             value={date}
-                            onChange={(e) => setDate(e.target.value)}
+                            onChange={async (e) => setDate(e.target.value)}
                             required
                         />
                     </form>

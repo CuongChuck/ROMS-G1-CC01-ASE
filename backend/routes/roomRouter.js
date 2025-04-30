@@ -79,6 +79,35 @@ roomRouter.get('/register/:id', async (request, response) => {
     }
 });
 
+roomRouter.get('/free/:id/:date', async (request, response) => {
+    try {
+        const { id, date } = request.params;
+        const sql = `CALL GetFree(?,?)`;
+        mysqlConnection.query(sql, [id, date], (err, result, field) => {
+            if (err) {
+                console.error(err.message);
+                return response.status(500).json({message: "Getting room list error"});
+            }
+            var lst = [];
+            for (let i = 2; i < 13; i++) {
+                let dup = false;
+                for (const reg of result[0]) {
+                    if (i >= reg.Start && i <= reg.End) {
+                        dup = true;
+                        break;
+                    }
+                }
+                if (!dup) lst.push(i);
+            }
+            return response.status(200).json({data: lst});
+        });
+    }
+    catch (err) {
+        console.error(err);
+        return response.status(500).json({message: "Getting room list error"});
+    }
+});
+
 roomRouter.post('/register/add/:id', async (request, response) => {
     try {
         const { id } = request.params;
