@@ -92,7 +92,7 @@ CREATE TABLE `register` (
   KEY `register_user_idx` (`UserID`),
   CONSTRAINT `register_room` FOREIGN KEY (`RoomID`) REFERENCES `room` (`RoomID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `register_user` FOREIGN KEY (`UserID`) REFERENCES `user` (`UserID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -101,34 +101,9 @@ CREATE TABLE `register` (
 
 LOCK TABLES `register` WRITE;
 /*!40000 ALTER TABLE `register` DISABLE KEYS */;
-INSERT INTO `register` VALUES (0000000004,001,0000003,'2025-05-11',8,12,'2025-04-30 00:52:14.78376','DSA');
+INSERT INTO `register` VALUES (0000000004,001,0000003,'2025-04-30',7,8,'2025-04-30 00:52:14.78376','DSA'),(0000000009,001,0000003,'2025-04-30',10,11,'2025-04-30 11:57:03.58853','DSA'),(0000000010,001,0000003,'2025-04-30',9,9,'2025-04-30 12:25:01.62647','DSA');
 /*!40000 ALTER TABLE `register` ENABLE KEYS */;
 UNLOCK TABLES;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `registerDuplicate_BEFORE_INSERT` BEFORE INSERT ON `register` FOR EACH ROW BEGIN
-		IF EXISTS (
-		SELECT *
-        FROM register
-        WHERE DateUse = NEW.`DateUse` AND Start = NEW.`Start` AND End = NEW.`End`
-    )
-    THEN
-		SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Duplicate register';
-	END IF;
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -141,7 +116,7 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `registerDate_BEFORE_INSERT` BEFORE INSERT ON `register` FOR EACH ROW BEGIN
 	DECLARE validDate condition for sqlstate '45000';
     IF (NEW.`DateUse` < CURDATE() OR
-    (NEW.`DateUse` = CURDATE() AND NEW.`Start` + 5 < HOUR(CURRENT_TIME()))) THEN
+    (NEW.`DateUse` = CURDATE() AND NEW.`Start` + 5 <= HOUR(CURRENT_TIME()))) THEN
 		SIGNAL validDate
         SET MESSAGE_TEXT = 'Error: Date must be in the future.';
 	END IF;
@@ -160,11 +135,12 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `registerDuplicate_BEFORE_UPDATE_1` BEFORE UPDATE ON `register` FOR EACH ROW BEGIN
-		IF EXISTS (
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `registerDuplicate_BEFORE_INSERT` BEFORE INSERT ON `register` FOR EACH ROW BEGIN
+	IF EXISTS (
 		SELECT *
         FROM register
-        WHERE DateUse = NEW.`DateUse` AND Start = NEW.`Start` AND End = NEW.`End`
+        WHERE DateUse = NEW.`DateUse` AND ((Start <= NEW.`Start` AND End >= NEW.`Start`)
+        OR (Start <= NEW.`End` AND End >= NEW.`End`))
     )
     THEN
 		SIGNAL SQLSTATE '45000'
@@ -186,11 +162,37 @@ DELIMITER ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `register_BEFORE_UPDATE` BEFORE UPDATE ON `register` FOR EACH ROW BEGIN
-	DECLARE validDate condition for sqlstate '45000';
+DECLARE validDate condition for sqlstate '45000';
     IF (NEW.`DateUse` < CURDATE() OR
-    (NEW.`DateUse` = CURDATE() AND NEW.`Start` + 5 < HOUR(CURRENT_TIME()))) THEN
+    (NEW.`DateUse` = CURDATE() AND NEW.`Start` + 5 <= HOUR(CURRENT_TIME()))) THEN
 		SIGNAL validDate
         SET MESSAGE_TEXT = 'Error: Date must be in the future.';
+	END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `registerDuplicate_BEFORE_UPDATE_1` BEFORE UPDATE ON `register` FOR EACH ROW BEGIN
+	IF EXISTS (
+		SELECT *
+        FROM register
+        WHERE DateUse = NEW.`DateUse` AND ((Start <= NEW.`Start` AND End >= NEW.`Start`)
+        OR (Start <= NEW.`End` AND End >= NEW.`End`))
+    )
+    THEN
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Duplicate register';
 	END IF;
 END */;;
 DELIMITER ;
@@ -265,6 +267,48 @@ UNLOCK TABLES;
 --
 -- Dumping routines for database 'roms'
 --
+/*!50003 DROP PROCEDURE IF EXISTS `GetBuildingRoom` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetBuildingRoom`(IN building VARCHAR(3))
+BEGIN
+	SELECT DISTINCT RoomID, RoomNum, BuildingName, Location, FacultyName
+	FROM room INNER JOIN (building LEFT JOIN faculty USING(BuildingID)) USING(BuildingID)
+    WHERE BuildingName = building;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `GetFree` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetFree`(IN id INT, IN datee date)
+BEGIN
+	SELECT Start, End
+    FROM register
+    WHERE RoomID = id AND datee >= CURDATE() AND DateUse = datee;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `GetRegister` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -327,6 +371,27 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `GetRoomNum` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetRoomNum`(IN num INT)
+BEGIN
+	SELECT DISTINCT RoomID, RoomNum, BuildingName, Location, FacultyName
+	FROM room INNER JOIN (building LEFT JOIN faculty USING(BuildingID)) USING(BuildingID)
+    WHERE RoomNum = num;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `GetRoomSchedule` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -345,7 +410,29 @@ BEGIN
     
     SELECT Name, Subject, DateUse, Start, End
     FROM register INNER JOIN user USING(UserID)
-    WHERE RoomID = id;
+    WHERE RoomID = id AND DateUse >= CURDATE() AND (Start + 5 >= HOUR(CURRENT_TIME()) OR End + 5 >= HOUR(CURRENT_TIME()))
+    ORDER BY DateUse, Start;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `GetRoomSearch` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `GetRoomSearch`(IN num INT, IN building VARCHAR(3))
+BEGIN
+	SELECT DISTINCT RoomID, RoomNum, BuildingName, Location, FacultyName
+	FROM room INNER JOIN (building LEFT JOIN faculty USING(BuildingID)) USING(BuildingID)
+    WHERE RoomNum = num AND BuildingName = building;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -391,7 +478,8 @@ BEGIN
     
     SELECT RegisterID, RoomNum, BuildingName, Subject, Location, DateUse, Start, End
 	FROM (room INNER JOIN building USING(BuildingID)) INNER JOIN register USING(RoomID)
-    WHERE UserID = id;
+	WHERE UserID = id AND DateUse >= CURDATE() AND Start + 5 >= HOUR(CURRENT_TIME())
+	ORDER BY DateUse, Start;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -497,4 +585,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-04-30  1:00:01
+-- Dump completed on 2025-04-30 18:33:07
