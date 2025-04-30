@@ -32,12 +32,16 @@ const Table = () => {
                     <th>Tiết</th>
                 </tr>
                 {lst.map((record) => {
+                    const dateUse = moment(record.DateUse).utcOffset('+0700').format('DD-MM-YYYY');
+                    const date = moment().utcOffset('+0700').format('DD-MM-YYYY');
+                    const time = new Date();
+                    const style = (dateUse == date && record.Start + 5 <= time.getHours()) ? 'bold' : 'normal';
                     return (
                         <tr>
-                            <td>{record.Name}</td>
-                            <td>{record.Subject}</td>
-                            <td>{moment(record.DateUse).utcOffset('+0700').format('DD-MM-YYYY')}</td>
-                            <td>{record.Start + '-' + record.End}</td>
+                            <td style={{fontWeight:style}}>{record.Name}</td>
+                            <td style={{fontWeight:style}}>{record.Subject}</td>
+                            <td style={{fontWeight:style}}>{dateUse}</td>
+                            <td style={{fontWeight:style}}>{record.Start + '-' + record.End}</td>
                         </tr>
                     );
                 })}
