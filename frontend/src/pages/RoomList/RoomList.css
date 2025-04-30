@@ -3,6 +3,24 @@
     flex-direction: column;
     align-items: center;
 
+    .SearchBar {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        background-color: var(--color-accent);
+        border-radius: 10px;
+        padding-right: 10px;
+        margin-bottom: 50px;
+    
+        input {
+            border: none;
+            background-color: inherit;
+            margin: 10px;
+            font-size: var(--small-textsize);
+            color: var(--color-background);
+        }
+    }
+
     h1 {
         margin-bottom: 20px;
     }
