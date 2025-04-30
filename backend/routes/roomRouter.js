@@ -108,6 +108,60 @@ roomRouter.get('/free/:id/:date', async (request, response) => {
     }
 });
 
+roomRouter.get('/building/:search', async (request, response) => {
+    try {
+        const { search } = request.params;
+        const sql = `CALL GetBuildingRoom(?)`;
+        mysqlConnection.query(sql, [search], (err, result, field) => {
+            if (err) {
+                console.error(err.message);
+                return response.status(500).json({message: "Getting room list error"});
+            }
+            return response.status(200).json({data: result[0]});
+        });
+    }
+    catch (err) {
+        console.error(err);
+        return response.status(500).json({message: "Getting room list error"});
+    }
+});
+
+roomRouter.get('/num/:search', async (request, response) => {
+    try {
+        const { search } = request.params;
+        const sql = `CALL GetRoomNum(?)`;
+        mysqlConnection.query(sql, [search], (err, result, field) => {
+            if (err) {
+                console.error(err.message);
+                return response.status(500).json({message: "Getting room list error"});
+            }
+            return response.status(200).json({data: result[0]});
+        });
+    }
+    catch (err) {
+        console.error(err);
+        return response.status(500).json({message: "Getting room list error"});
+    }
+});
+
+roomRouter.get('/:num/:building', async (request, response) => {
+    try {
+        const { num, building } = request.params;
+        const sql = `CALL GetRoomSearch(?,?)`;
+        mysqlConnection.query(sql, [num, building], (err, result, field) => {
+            if (err) {
+                console.error(err);
+                return response.status(500).json({message: "Getting room list error"});
+            }
+            return response.status(200).json({data: result[0]});
+        });
+    }
+    catch (err) {
+        console.error(err);
+        return response.status(500).json({message: "Getting room list error"});
+    }
+});
+
 roomRouter.post('/register/add/:id', async (request, response) => {
     try {
         const { id } = request.params;
