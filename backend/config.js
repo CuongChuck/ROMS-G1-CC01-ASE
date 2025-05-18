@@ -7,5 +7,5 @@ export const mysqlConnection = mysql.createConnection({
     port: 3306,
     user: "ROMS_Admin",
     password: "rAtrObitaNTo",
-    database: "roms",
+    database: "roms"
 });
