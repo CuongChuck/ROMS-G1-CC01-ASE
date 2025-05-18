@@ -195,10 +195,10 @@ roomRouter.post('/register/add/:id', async (request, response) => {
 roomRouter.put('/register', async (request, response) => {
     try {
         const values = [
-            request.body.registerid, request.body.date,
-            request.body.start, request.body.end, request.body.subject
+            request.body.date, parseInt(request.body.start, 10), parseInt(request.body.end, 10),
+            request.body.subject, parseInt(request.body.registerid, 10)
         ]
-        const sql = `CALL UpdateRegister(?,?,?,?,?)`;
+        const sql = `UPDATE register SET DateUse = ?, Start = ?, End = ?, Subject = ? WHERE RegisterID = ?`;
         mysqlConnection.query(sql, values, (err, results, fields) => {
             if (err) {
                 console.error(err);
