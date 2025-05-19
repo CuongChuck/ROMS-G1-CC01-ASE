@@ -49,3 +49,4 @@ cd frontend
 npm run dev
 ```
 9. Copy one of the links provided by Vite into a browser's search bar, then press Enter
+10. If you see a warning from the browser, click "Advanced" then click "Continue to localhost (unsafe)"
